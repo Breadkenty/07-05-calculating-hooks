@@ -6,7 +6,7 @@ function App() {
   const [firstOperandSelected, setFirstOperandSelected] = useState(true)
   let [showEquals, setShowEquals] = useState(false)
   const [firstInput, setFirstInput] = useState(true)
-  const [firstOperand, setFirstOperand] = useState('0')
+  let [firstOperand, setFirstOperand] = useState('0')
   const [operator, setOperator] = useState()
   let [secondOperand, setSecondOperand] = useState('0')
   let [equals, setEquals] = useState()
@@ -69,12 +69,14 @@ function App() {
   function backspaceOnDisplay() {
     if (firstOperandSelected) {
       setFirstOperand(
-        display.length > 1 ? display.substring(0, display.length - 1) : '0'
+        display.length > 1 ? display.substring(0, display.length - 1) : '0',
+        setFirstInput(true)
       )
       setDisplay(firstOperand)
     } else {
       setSecondOperand(
-        display.length > 1 ? display.substring(0, display.length - 1) : '0'
+        display.length > 1 ? display.substring(0, display.length - 1) : '0',
+        setFirstInput(true)
       )
       setDisplay(secondOperand)
     }
@@ -162,6 +164,7 @@ function App() {
       answer = parseFloat(firstOperand) + parseFloat(secondOperand)
     }
     setEquals(answer)
+    setFirstOperand(answer)
     setShowEquals(true)
   }
 

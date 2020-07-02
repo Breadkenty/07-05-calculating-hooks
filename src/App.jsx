@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 function App() {
-  const [display, setDisplay] = useState('0')
+  let [display, setDisplay] = useState('0')
   const [operator, setOperator] = useState()
-  const [leftOperand, setLeftOperand] = useState()
-  const [rightOperand, setRightOperand] = useState()
-  const [total, setTotal] = useState()
+  const [firstOperand, setFirstOperand] = useState()
+  const [calculation, setCalculation] = useState()
+  const [history, setHistory] = useState([])
+
+  useEffect(capCalculatorDisplay, [display])
 
   function onClickNumber(event) {
     if (display.length === 1 && display === '0') {
@@ -16,35 +18,42 @@ function App() {
   }
 
   function onClickOperator(operator) {
-    setLeftOperand(parseFloat(display))
+    setFirstOperand(display)
     setDisplay('0')
     setOperator(operator)
   }
 
   function onClickEqual() {
-    setRightOperand(parseFloat(display))
-
-    switch (operator) {
-      case '/':
-        setDisplay(leftOperand / rightOperand)
-        break
-      case '*':
-        setDisplay(leftOperand * rightOperand)
-        break
-      case '-':
-        setDisplay(leftOperand - rightOperand)
-        break
-      case '+':
-        setDisplay(leftOperand + rightOperand)
-        break
+    let answer
+    if (operator === '/') {
+      answer = `${parseFloat(firstOperand) / parseFloat(display)}`
+    } else if (operator === '*') {
+      answer = `${parseFloat(firstOperand) * parseFloat(display)}`
+    } else if (operator === '-') {
+      answer = `${parseFloat(firstOperand) - parseFloat(display)}`
+    } else if (operator === '+') {
+      answer = `${parseFloat(firstOperand) + parseFloat(display)}`
     }
+    let calculationAsString = `${firstOperand} ${operator} ${display} = ${answer}`
+    setDisplay(answer)
+    setCalculation(calculationAsString)
+    RecordHistory(calculationAsString)
+  }
+
+  function RecordHistory(calculationAsString) {
+    setHistory([...history, calculationAsString])
   }
 
   function clearState() {
     setDisplay('0')
     setOperator()
-    setLeftOperand()
-    setRightOperand()
+    setFirstOperand()
+  }
+
+  function capCalculatorDisplay() {
+    if (display.length > 10) {
+      display = display.substring(display.length - 10, display.length)
+    }
   }
 
   return (
@@ -129,6 +138,13 @@ function App() {
             &#61;
           </button>
         </div>
+      </div>
+      <div className="history-container">
+        <ul>
+          {history.map(calculation => (
+            <li>{calculation}</li>
+          ))}
+        </ul>
       </div>
     </main>
   )

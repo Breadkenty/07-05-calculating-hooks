@@ -65,3 +65,12 @@ main {
 .button:last-child {
   border-bottom-right-radius: 8px;
 }
+
+.history-container {
+  margin-left: 35px;
+  padding: 10px;
+  height: 400px;
+  width: 300px;
+  border: 1px #aeaeae solid;
+  border-radius: 2px;
+}

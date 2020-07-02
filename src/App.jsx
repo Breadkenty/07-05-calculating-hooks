@@ -9,11 +9,70 @@ function App() {
 
   useEffect(capCalculatorDisplay, [display])
 
-  function onClickNumber(event) {
-    if (display.length === 1 && display === '0') {
+  function onClickNumber(event, typedKey) {
+    if (event && display.length === 1 && display === '0') {
       setDisplay(event.target.innerText)
-    } else {
+    } else if (event) {
       setDisplay(display + event.target.innerText)
+    } else if (
+      event === undefined &&
+      typedKey &&
+      display.length === 1 &&
+      display === '0'
+    ) {
+      setDisplay(typedKey)
+    } else if (event === undefined && typedKey) {
+      setDisplay(display + typedKey)
+    }
+  }
+
+  function onTypeNumber(event) {
+    switch (event.key) {
+      case '1':
+        onClickNumber(undefined, '1')
+        break
+      case '2':
+        onClickNumber(undefined, '2')
+        break
+      case '3':
+        onClickNumber(undefined, '3')
+        break
+      case '4':
+        onClickNumber(undefined, '4')
+        break
+      case '5':
+        onClickNumber(undefined, '5')
+        break
+      case '6':
+        onClickNumber(undefined, '6')
+        break
+      case '7':
+        onClickNumber(undefined, '7')
+        break
+      case '8':
+        onClickNumber(undefined, '8')
+        break
+      case '9':
+        onClickNumber(undefined, '9')
+        break
+      case '0':
+        onClickNumber(undefined, '0')
+        break
+      case '/':
+        onClickOperator('/')
+        break
+      case '*':
+        onClickOperator('*')
+        break
+      case '-':
+        onClickOperator('-')
+        break
+      case '+':
+        onClickOperator('+')
+        break
+      case '=':
+        onClickEqual()
+        break
     }
   }
 
@@ -58,7 +117,7 @@ function App() {
 
   return (
     <main>
-      <div className="calculator">
+      <div className="calculator" onKeyPress={onTypeNumber}>
         <div className="display">{display}</div>
         <div className="buttons">
           <button className="button fn" onClick={clearState}>

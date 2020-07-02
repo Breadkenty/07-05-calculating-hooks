@@ -3,107 +3,172 @@ import KeyboardEventHandler from 'react-keyboard-event-handler'
 
 function App() {
   let [display, setDisplay] = useState('0')
+  const [firstOperandSelected, setFirstOperandSelected] = useState(true)
+  const [showEquals, setShowEquals] = useState(false)
+  const [firstInput, setFirstInput] = useState(true)
+  const [firstOperand, setFirstOperand] = useState('0')
   const [operator, setOperator] = useState()
-  const [firstOperand, setFirstOperand] = useState()
-  const [secondOperand, setSecondOperand] = useState()
-  const [calculation, setCalculation] = useState()
+  const [secondOperand, setSecondOperand] = useState('0')
+  const [equals, setEquals] = useState()
   const [history, setHistory] = useState([])
 
-  function onClickNumber(event, typedKey) {
-    if (event && display.length === 1 && display === '0') {
-      setDisplay(event.target.innerText)
-    } else if (event) {
-      setDisplay(display + event.target.innerText)
-    } else if (
-      event === undefined &&
-      typedKey &&
-      display.length === 1 &&
-      display === '0'
-    ) {
-      setDisplay(typedKey)
-    } else if (event === undefined && typedKey) {
-      setDisplay(display + typedKey)
+  // useEffect(displayOperands, [firstOperand])
+  // useEffect(displayOperands, [secondOperand])
+  // useEffect(displayOperands, [equals])
+
+  function displayOperands() {
+    if (firstOperandSelected && !showEquals) {
+      setDisplay(firstOperand)
+    } else if (!firstOperandSelected && !showEquals) {
+      setDisplay(secondOperand)
+    } else if (showEquals) {
+      setDisplay(showEquals)
     }
   }
 
-  function onTypeNumber(event) {
-    console.log(event)
+  function updateOperand(event, typedKey) {
+    let input = event !== undefined ? event.target.innerText : typedKey
+
+    if (firstOperandSelected === true) {
+      if (firstInput === true) {
+        setFirstOperand(input)
+        // displayOperands()
+        setFirstInput(false)
+      } else {
+        if (firstOperand.length < 10) {
+          setFirstOperand(firstOperand + input)
+          // displayOperands()
+        } else {
+          setFirstOperand(
+            [...firstOperand.toString()]
+              .reverse()
+              .slice(0, 10)
+              .reverse()
+              .join('') + input
+          )
+          // displayOperands()
+        }
+      }
+    } else if (firstOperandSelected === false) {
+      if (firstInput === true) {
+        setSecondOperand(input)
+        // displayOperands()
+        setFirstInput(false)
+      } else {
+        if (secondOperand.length < 10) {
+          setSecondOperand(secondOperand + input)
+          // displayOperands()
+        } else {
+          setSecondOperand(
+            [...secondOperand.toString()]
+              .reverse()
+              .slice(0, 10)
+              .reverse()
+              .join('') + input
+          )
+          // displayOperands()
+        }
+      }
+    }
+  }
+
+  function backspaceOnDisplay() {
+    if (firstOperandSelected) {
+      setFirstOperand(
+        display.length > 1 ? display.substring(0, display.length - 1) : '0'
+      )
+      setDisplay(firstOperand)
+    } else {
+      setSecondOperand(
+        display.length > 1 ? display.substring(0, display.length - 1) : '0'
+      )
+      setDisplay(secondOperand)
+    }
+  }
+
+  function handleKeypress(event) {
     switch (event) {
       case '1':
-        onClickNumber(undefined, '1')
+        updateOperand(undefined, '1')
         break
       case '2':
-        onClickNumber(undefined, '2')
+        updateOperand(undefined, '2')
         break
       case '3':
-        onClickNumber(undefined, '3')
+        updateOperand(undefined, '3')
         break
       case '4':
-        onClickNumber(undefined, '4')
+        updateOperand(undefined, '4')
         break
       case '5':
-        onClickNumber(undefined, '5')
+        updateOperand(undefined, '5')
         break
       case '6':
-        onClickNumber(undefined, '6')
+        updateOperand(undefined, '6')
         break
       case '7':
-        onClickNumber(undefined, '7')
+        updateOperand(undefined, '7')
         break
       case '8':
-        onClickNumber(undefined, '8')
+        updateOperand(undefined, '8')
         break
       case '9':
-        onClickNumber(undefined, '9')
+        updateOperand(undefined, '9')
         break
       case '0':
-        console.log('hello')
-        onClickNumber(undefined, '0')
+        updateOperand(undefined, '0')
         break
       case '/':
-        onClickOperator('/')
+        selectOperator('/')
         break
       case '*':
-        onClickOperator('*')
+        selectOperator('*')
         break
       case '-':
-        onClickOperator('-')
+        selectOperator('-')
         break
       case '+':
-        onClickOperator('+')
+        selectOperator('+')
+        break
+      case 'Backspace':
+        backspaceOnDisplay()
         break
       case 'Enter':
         onClickEqual()
         break
+      case 'Clear':
+        clearState()
+        break
     }
   }
 
-  function onClickOperator(operator) {
-    if (!firstOperand) {
-      setFirstOperand(display)
-      // setDisplay('0')
-      setOperator(operator)
-    } else {
-      setOperator(operator)
-      onClickEqual()
-    }
+  function selectOperator(operator) {
+    setOperator(operator)
+    setFirstOperandSelected(false)
+    setFirstInput(true)
+
+    // if (firstOperand === undefined) {
+    //   setFirstOperand(display)
+    //   setDisplay('0')
+    // } else if (firstOperand !== undefined) {
+    //   setSecondOperand(display)
+    //   onClickEqual()
+    // }
   }
 
   function onClickEqual() {
     let answer
     if (operator === '/') {
-      answer = parseFloat(firstOperand) / parseFloat(display)
+      answer = parseFloat(firstOperand) / parseFloat(secondOperand)
     } else if (operator === '*') {
-      answer = parseFloat(firstOperand) * parseFloat(display)
+      answer = parseFloat(firstOperand) * parseFloat(secondOperand)
     } else if (operator === '-') {
-      answer = parseFloat(firstOperand) - parseFloat(display)
+      answer = parseFloat(firstOperand) - parseFloat(secondOperand)
     } else if (operator === '+') {
-      answer = parseFloat(firstOperand) + parseFloat(display)
+      answer = parseFloat(firstOperand) + parseFloat(secondOperand)
     }
-    let calculationAsString = `${firstOperand} ${operator} ${display} = ${answer}`
-    setDisplay(answer % 1 === 0 ? answer : answer.toFixed(4))
-    setCalculation(calculationAsString)
-    RecordHistory(calculationAsString)
+    setEquals(answer)
+    setShowEquals(true)
   }
 
   function RecordHistory(calculationAsString) {
@@ -135,8 +200,10 @@ function App() {
           '-',
           '+',
           'Enter',
+          'Clear',
+          'Backspace',
         ]}
-        onKeyEvent={onTypeNumber}
+        onKeyEvent={handleKeypress}
       />
 
       <main>
@@ -153,63 +220,63 @@ function App() {
             <button
               className="button op"
               onClick={() => {
-                onClickOperator('/')
+                selectOperator('/')
               }}
             >
               &#247;
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               7
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               8
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               9
             </button>
             <button
               className="button op"
               onClick={() => {
-                onClickOperator('*')
+                selectOperator('*')
               }}
             >
               &#215;
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               4
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               5
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               6
             </button>
             <button
               className="button op"
               onClick={() => {
-                onClickOperator('-')
+                selectOperator('-')
               }}
             >
               &#8722;
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               1
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               2
             </button>
-            <button className="button" onClick={onClickNumber}>
+            <button className="button" onClick={updateOperand}>
               3
             </button>
             <button
               className="button op"
               onClick={() => {
-                onClickOperator('+')
+                selectOperator('+')
               }}
             >
               &#43;
             </button>
-            <button className="button x2" onClick={onClickNumber}>
+            <button className="button x2" onClick={updateOperand}>
               0
             </button>
             <button className="button">.</button>

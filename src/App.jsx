@@ -4,17 +4,17 @@ import KeyboardEventHandler from 'react-keyboard-event-handler'
 function App() {
   let [display, setDisplay] = useState('0')
   const [firstOperandSelected, setFirstOperandSelected] = useState(true)
-  const [showEquals, setShowEquals] = useState(false)
+  let [showEquals, setShowEquals] = useState(false)
   const [firstInput, setFirstInput] = useState(true)
   const [firstOperand, setFirstOperand] = useState('0')
   const [operator, setOperator] = useState()
-  const [secondOperand, setSecondOperand] = useState('0')
-  const [equals, setEquals] = useState()
+  let [secondOperand, setSecondOperand] = useState('0')
+  let [equals, setEquals] = useState()
   const [history, setHistory] = useState([])
 
-  // useEffect(displayOperands, [firstOperand])
-  // useEffect(displayOperands, [secondOperand])
-  // useEffect(displayOperands, [equals])
+  useEffect(displayOperands, [firstOperand])
+  useEffect(displayOperands, [secondOperand])
+  useEffect(displayOperands, [showEquals])
 
   function displayOperands() {
     if (firstOperandSelected && !showEquals) {
@@ -22,7 +22,7 @@ function App() {
     } else if (!firstOperandSelected && !showEquals) {
       setDisplay(secondOperand)
     } else if (showEquals) {
-      setDisplay(showEquals)
+      setDisplay(equals)
     }
   }
 
@@ -32,12 +32,10 @@ function App() {
     if (firstOperandSelected === true) {
       if (firstInput === true) {
         setFirstOperand(input)
-        // displayOperands()
         setFirstInput(false)
       } else {
         if (firstOperand.length < 10) {
           setFirstOperand(firstOperand + input)
-          // displayOperands()
         } else {
           setFirstOperand(
             [...firstOperand.toString()]
@@ -46,18 +44,15 @@ function App() {
               .reverse()
               .join('') + input
           )
-          // displayOperands()
         }
       }
     } else if (firstOperandSelected === false) {
       if (firstInput === true) {
         setSecondOperand(input)
-        // displayOperands()
         setFirstInput(false)
       } else {
         if (secondOperand.length < 10) {
           setSecondOperand(secondOperand + input)
-          // displayOperands()
         } else {
           setSecondOperand(
             [...secondOperand.toString()]
@@ -66,7 +61,6 @@ function App() {
               .reverse()
               .join('') + input
           )
-          // displayOperands()
         }
       }
     }

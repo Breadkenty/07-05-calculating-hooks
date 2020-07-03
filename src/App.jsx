@@ -129,6 +129,7 @@ function App() {
         selectOperator('/')
         break
       case '*':
+      case 'shift + 8':
         selectOperator('*')
         break
       case '-':
@@ -139,15 +140,18 @@ function App() {
         }
         break
       case '+':
+      case 'shift + =':
         selectOperator('+')
         break
       case 'Backspace':
         backspaceOnDisplay()
         break
+      case '=':
       case 'Enter':
         onClickEqual()
         break
       case 'Clear':
+      case 'shift + Backspace':
         clearState()
         break
     }
@@ -220,7 +224,11 @@ function App() {
           '*',
           '-',
           '+',
+          '=',
           'shift + 5',
+          'shift + 8',
+          'shift + =',
+          'shift + Backspace',
           'Enter',
           'Clear',
           'Backspace',
@@ -349,7 +357,7 @@ function App() {
             <strong>Equal:</strong> Return/Enter
           </li>
           <li>
-            <strong>AC:</strong> Clear(Numpad)
+            <strong>AC:</strong> Clear(Numpad)/Shift + Backspace
           </li>
           <li>
             <strong>&#37;:</strong> Shift + 5

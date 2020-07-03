@@ -28,6 +28,7 @@ function App() {
 
   function updateOperand(event, typedKey) {
     let input = event !== undefined ? event.target.innerText : typedKey
+    setShowEquals(false)
 
     if (firstOperandSelected === true) {
       if (firstInput === true) {
@@ -83,6 +84,7 @@ function App() {
   }
 
   function handleKeypress(event) {
+    console.log(event)
     switch (event) {
       case '1':
         updateOperand(undefined, '1')
@@ -114,6 +116,15 @@ function App() {
       case '0':
         updateOperand(undefined, '0')
         break
+      case '.':
+        updateOperand(undefined, '.')
+        break
+      case 'shift + 5':
+        if (firstOperandSelected) {
+          setFirstOperand(firstOperand / 100)
+        } else {
+          setSecondOperand(secondOperand / 100)
+        }
       case '/':
         selectOperator('/')
         break
@@ -121,7 +132,11 @@ function App() {
         selectOperator('*')
         break
       case '-':
-        selectOperator('-')
+        if (firstInput) {
+          updateOperand(undefined, '-')
+        } else {
+          selectOperator('-')
+        }
         break
       case '+':
         selectOperator('+')
@@ -143,13 +158,10 @@ function App() {
     setFirstOperandSelected(false)
     setFirstInput(true)
 
-    // if (firstOperand === undefined) {
-    //   setFirstOperand(display)
-    //   setDisplay('0')
-    // } else if (firstOperand !== undefined) {
-    //   setSecondOperand(display)
-    //   onClickEqual()
-    // }
+    if (showEquals === false && secondOperand === 0) {
+      setSecondOperand(firstOperand)
+      onClickEqual()
+    }
   }
 
   function onClickEqual() {
@@ -162,10 +174,15 @@ function App() {
       answer = parseFloat(firstOperand) - parseFloat(secondOperand)
     } else if (operator === '+') {
       answer = parseFloat(firstOperand) + parseFloat(secondOperand)
+    } else if (operator === undefined) {
+      answer = parseFloat(firstOperand)
     }
-    setEquals(answer)
-    setFirstOperand(answer)
+    setEquals(answer % 1 === 0 ? answer : answer.toFixed(8))
+    setFirstOperand(answer % 1 === 0 ? answer : answer.toFixed(8))
     setShowEquals(true)
+    setFirstInput(true)
+    setFirstOperandSelected(true)
+    RecordHistory(`${firstOperand} ${operator} ${secondOperand} = ${answer}`)
   }
 
   function RecordHistory(calculationAsString) {
@@ -174,8 +191,14 @@ function App() {
 
   function clearState() {
     setDisplay('0')
+    setFirstOperand('0')
+    setSecondOperand('0')
     setOperator()
-    setFirstOperand()
+    setFirstInput(true)
+    setShowEquals(false)
+    setFirstOperandSelected(true)
+    setEquals()
+    setHistory([])
   }
 
   return (
@@ -192,10 +215,12 @@ function App() {
           '8',
           '9',
           '0',
+          '.',
           '/',
           '*',
           '-',
           '+',
+          'shift + 5',
           'Enter',
           'Clear',
           'Backspace',
@@ -212,8 +237,21 @@ function App() {
             <button className="button fn" onClick={clearState}>
               AC
             </button>
-            <button className="button fn">&#177;</button>
-            <button className="button fn">&#37;</button>
+            <button className="button fn" onClick={updateOperand}>
+              -
+            </button>
+            <button
+              className="button fn"
+              onClick={() => {
+                if (firstOperandSelected) {
+                  setFirstOperand(firstOperand / 100)
+                } else if (!firstOperandSelected) {
+                  setSecondOperand(secondOperand / 100)
+                }
+              }}
+            >
+              &#37;
+            </button>
             <button
               className="button op"
               onClick={() => {
@@ -276,7 +314,9 @@ function App() {
             <button className="button x2" onClick={updateOperand}>
               0
             </button>
-            <button className="button">.</button>
+            <button className="button" onClick={updateOperand}>
+              .
+            </button>
             <button
               className="button op"
               onClick={() => {
@@ -288,12 +328,29 @@ function App() {
           </div>
         </div>
         <div className="history-container">
-          <ul>
-            {history.map((calculation, index) => (
-              <li key={index}>{calculation}</li>
-            ))}
-          </ul>
+          <h2>History</h2>
+          <div>
+            <ul>
+              {history
+                .map((calculation, index) => <li key={index}>{calculation}</li>)
+                .reverse()}
+            </ul>
+          </div>
         </div>
+
+        <ul className="keybinding-legend">
+          <li>
+            <strong>Keybinding:</strong>
+          </li>
+          <li>Delete: Backspace</li>
+          <li>Equal: Return/Enter</li>
+          <li>AC: Clear(Numpad)</li>
+          <li>&#37;: Shift + 5</li>
+          <li>&#247;: /</li>
+          <li>&#215;: *</li>
+          <li>+: +</li>
+          <li>-: -</li>
+        </ul>
       </main>
     </>
   )

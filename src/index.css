@@ -9,7 +9,6 @@ main {
   height: 644px;
   width: 466px;
   background-color: #393b2f;
-  box-shadow: 0 22px 70px 4px rgba(0, 0, 0, 0.56);
   border-radius: 10px;
   overflow: hidden;
   padding: 2px;
@@ -68,9 +67,19 @@ main {
 
 .history-container {
   margin-left: 35px;
-  padding: 10px;
-  height: 400px;
+  padding: 30px;
+  height: 590px;
   width: 300px;
   border: 1px #aeaeae solid;
   border-radius: 2px;
+}
+
+.keybinding-legend li {
+  list-style: none;
+}
+
+.history-container div {
+  height: 80%;
+  width: 100%;
+  overflow: scroll;
 }

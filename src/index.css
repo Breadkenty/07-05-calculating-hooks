@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
 main {
   height: 100vh;
   display: flex;
@@ -71,10 +73,15 @@ main {
   height: 590px;
   width: 300px;
   border: 1px #aeaeae solid;
-  border-radius: 2px;
+  border-radius: 10px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 0.1rem;
 }
 
 .keybinding-legend li {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.1rem;
   list-style: none;
 }
 
@@ -82,4 +89,5 @@ main {
   height: 80%;
   width: 100%;
   overflow: scroll;
+  letter-spacing: 0rem;
 }

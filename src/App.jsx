@@ -342,14 +342,30 @@ function App() {
           <li>
             <strong>Keybinding:</strong>
           </li>
-          <li>Delete: Backspace</li>
-          <li>Equal: Return/Enter</li>
-          <li>AC: Clear(Numpad)</li>
-          <li>&#37;: Shift + 5</li>
-          <li>&#247;: /</li>
-          <li>&#215;: *</li>
-          <li>+: +</li>
-          <li>-: -</li>
+          <li>
+            <strong>Delete:</strong> Backspace
+          </li>
+          <li>
+            <strong>Equal:</strong> Return/Enter
+          </li>
+          <li>
+            <strong>AC:</strong> Clear(Numpad)
+          </li>
+          <li>
+            <strong>&#37;:</strong> Shift + 5
+          </li>
+          <li>
+            <strong>&#247;:</strong> /
+          </li>
+          <li>
+            <strong>&#215;:</strong> *
+          </li>
+          <li>
+            <strong>+:</strong> +
+          </li>
+          <li>
+            <strong>-:</strong> -
+          </li>
         </ul>
       </main>
     </>
